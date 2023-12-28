@@ -1,0 +1,33 @@
+  .chat-container {
+    width: 80%;
+    margin: 20px auto;
+    max-width: 800px;
+    background-color: white;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    overflow: auto;
+  }
+  /* 기존 스타일에 추가 */
+  
+  .message-input-container {
+    display: flex;
+    padding: 10px;
+  }
+  
+  .message-input-container input {
+    flex-grow: 1;
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .message-input-container button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #0084ff;
+    color: white;
+    cursor: pointer;
+  }
+  

@@ -1,0 +1,46 @@
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.4); /* 반투명 배경 */
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 300px;
+}
+
+.modal-content button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.modal-close-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.modal-delete-button {
+    background-color: #4caf50;
+    color: white;
+}
+
+/* 추가적인 스타일링 및 미디어 쿼리를 통해 반응형으로 만들 수 있음 */
