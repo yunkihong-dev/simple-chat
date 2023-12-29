@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ChatMessage from './components/ChatMessage';
-import Modal from './Modal';
-import MessageInput from './MessageInput'; // MessageInput 컴포넌트 임포트
+import Modal from './components/Modal';
+import MessageInput from './components/MessageInput'; // MessageInput 컴포넌트 임포트
 import './ChatRoom.css';
 
 
@@ -15,9 +15,6 @@ const ChatRoom = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedMessageId, setSelectedMessageId] = useState(null);
 
-    const handleInputChange = (e) => {
-        setNewMessage(e.target.value);
-    };
 
    const handleSendMessage = () => {
     if (newMessage.trim() !== '') {
@@ -28,12 +25,6 @@ const ChatRoom = () => {
         setNewMessage('');
     }
 };
-
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            handleSendMessage();
-        }
-    };
 
 
     const handleCloseModal = () => {
