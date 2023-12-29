@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './ChatMessage.css';
 
-const ChatMessage = ({ id, text, isUser, onLongPress,deleted }) => {
+const ChatMessage = ({ id, text, isUser, onLongPress, deleted, sendTime }) => {
     const [timer, setTimer] = useState(null);
     const messageClass = isUser ? 'message user' : 'message other';
     const messageStyle = deleted ? `${messageClass} deleted` : messageClass;
     const texts = deleted ? "삭제된 내용입니다." : text;
+    const sendTime1 = sendTime.split(":")[0] >= 12? sendTime.split(":")[0] >= 22? (sendTime.split(":")[0]-12)+":"+sendTime.split(":")[1]+" 오후" :"0"+(sendTime.split(":")[0]-12)+":"+sendTime.split(":")[1]+" 오후": sendTime+" 오전";
     const handleMouseDown = () => {
         // 사용자 메시지에 대해서만 롱 클릭 처리
         if (isUser) {
@@ -28,15 +29,16 @@ const ChatMessage = ({ id, text, isUser, onLongPress,deleted }) => {
     }, [timer]);
 
 
+
     return (
-        <div 
-            className={messageStyle}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp} // 마우스가 메시지 밖으로 이동할 경우에도 처리
-        >
-            {texts}
+        <div className={`message-wrapper ${messageStyle}`}>
+        <div className="message-container" onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
+            <div className="message-content">{texts}</div>
         </div>
+        {!deleted && <div className={`message-time-container ${messageStyle}`}>
+            <div className="message-time" >{sendTime1}</div>
+        </div>}
+    </div>
     );
 };
 

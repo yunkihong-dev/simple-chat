@@ -7,24 +7,38 @@ import './ChatRoom.css';
 
 const ChatRoom = () => {
     const [messages, setMessages] = useState([
-        { id: 1, text: "안녕하세요! 어떻게 지내세요?", isUser: false, deleted:false },
-        { id: 2, text: "전 잘 지내죠! 당신은 어떻게 지내시나요?", isUser: true, deleted:true },
-        { id: 3, text: "끄덕끄덕", isUser: false, deleted:false },
+        { id: 0, text: "끄덕끄덕", isUser: false, deleted:false,sendTime:"09:11" },
+        { id: 1, text: "안녕하세요! 어떻게 지내세요?", isUser: false, deleted:false, sendTime:"12:12" },
+        { id: 2, text: "전 잘 지내죠! 당신은 어떻게 지내시나요?", isUser: true, deleted:false, sendTime:"12:12"},
+        { id: 3, text: "끄적", isUser: false, deleted:false,sendTime:"12:13" },
+        { id: 4, text: "끄적끄적", isUser: false, deleted:false,sendTime:"23:11" },
     ]);
     const [newMessage, setNewMessage] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [selectedMessageId, setSelectedMessageId] = useState(null);
 
 
-   const handleSendMessage = () => {
-    if (newMessage.trim() !== '') {
-        const nextId = messages.length + 1;
-        // 새 메시지가 "삭제된 메시지입니다"와 동일한지 확인
-        const isDeletedMessage = newMessage.trim() === "삭제된 메시지입니다";
-        setMessages([...messages, { id: nextId, text: newMessage, isUser: true, deleted: isDeletedMessage }]);
-        setNewMessage('');
-    }
-};
+    const getCurrentTime = () => {
+        const now = new Date();
+        return now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+      };
+      
+    
+
+    const handleSendMessage = () => {
+        if (newMessage.trim() !== '') {
+          const nextId = messages.length + 1;
+          const isDeletedMessage = newMessage.trim() === "삭제된 메시지입니다";
+          const sendTime = getCurrentTime(); // 현재 시간을 얻음
+      
+          setMessages([
+            ...messages, 
+            { id: nextId, text: newMessage, isUser: true, deleted: isDeletedMessage, sendTime } 
+          ]);
+          setNewMessage('');
+        }
+      };
+
 
 
     const handleCloseModal = () => {
@@ -58,6 +72,7 @@ const ChatRoom = () => {
                     id={message.id}
                     text={message.text}
                     isUser={message.isUser}
+                    sendTime={message.sendTime}
                     onLongPress={handleLongPress}
                     deleted={message.deleted}  // 'deleted' 속성 전달
                 />

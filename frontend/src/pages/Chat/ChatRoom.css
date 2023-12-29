@@ -10,8 +10,11 @@
   /* 기존 스타일에 추가 */
   
   .message-input-container {
+    width: 76%;
+    margin: 0 auto;
     display: flex;
     padding: 10px;
+    max-width: 800px;
   }
   
   .message-input-container input {
@@ -31,3 +34,4 @@
     cursor: pointer;
   }
   
+

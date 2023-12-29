@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
 import './LoginForm.css';
+import { useNavigate } from 'react-router-dom';
+
 const LoginForm = (e) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
+    const navigate = useNavigate();
     const handleSubmit = (e) => {
         e.preventDefault();
         onLogin(username, password);
     };
 
-    const onLogin = (e)=>{
-        if(username === "test" && password === "test"){
-            alert("test 회원님 반갑습니다.")
+    const onLogin = () => {
+        if ((username === "test" && password === "test") || (username === "1" && password === "1")) {
+            alert(`${username} 회원님 반갑습니다.`);
+            const userId = username === "test"? "1" : "2";
+            navigate(`/ChatRoom/${userId}`);
         }else if(username === "1" && password === "1"){
             alert("1 회원님 반갑습니다.")
+            navigate('/ChatRoom/2'); 
         }else{
             alert("뉘신지..")
         }
