@@ -7,7 +7,6 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     overflow: auto;
   }
-  /* 기존 스타일에 추가 */
   
   .message-input-container {
     width: 76%;
@@ -26,12 +25,14 @@
   }
   
   .message-input-container button {
+    width: fit-content;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     background-color: #0084ff;
     color: white;
     cursor: pointer;
+    white-space: nowrap; 
   }
   
 

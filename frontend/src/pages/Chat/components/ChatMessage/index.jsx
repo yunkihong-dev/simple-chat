@@ -1,44 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import './ChatMessage.css';
 
-const ChatMessage = ({ id, text, isUser, onLongPress, deleted, sendTime }) => {
+const ChatMessage = ({ id, text, userId, onLongPress, deleted, sendTime, currentUser }) => {
     const [timer, setTimer] = useState(null);
-    const messageClass = isUser ? 'message user' : 'message other';
+    // Determine if the message belongs to the current user for styling
+    const isCurrentUserMessage = userId === currentUser;
+    const messageClass = isCurrentUserMessage ? 'message user' : 'message other';
     const messageStyle = deleted ? `${messageClass} deleted` : messageClass;
     const texts = deleted ? "삭제된 내용입니다." : text;
-    const sendTime1 = sendTime.split(":")[0] >= 12? sendTime.split(":")[0] >= 22? (sendTime.split(":")[0]-12)+":"+sendTime.split(":")[1]+" 오후" :"0"+(sendTime.split(":")[0]-12)+":"+sendTime.split(":")[1]+" 오후": sendTime+" 오전";
+  
+    const formatSendTime = () => {
+        const [hours, minutes] = sendTime.split(":").map(Number);
+        const isPM = hours >= 12;
+        const adjustedHours = hours % 12 || 12;
+        const formattedHours = adjustedHours.toString().padStart(2, '0');
+        const suffix = isPM ? '오후' : '오전';
+        return `${suffix} ${formattedHours}:${minutes}`;
+    };
+
+    const sendTime1 = formatSendTime();
+
     const handleMouseDown = () => {
-        // 사용자 메시지에 대해서만 롱 클릭 처리
-        if (isUser) {
-            // 롱 클릭 타이머 설정 (예: 500ms)
+        // Adjust this logic to handle events for the current user
+        if (isCurrentUserMessage) {
             const newTimer = setTimeout(() => onLongPress(id), 500);
             setTimer(newTimer);
         }
     };
 
     const handleMouseUp = () => {
-        // 마우스 버튼이 놓이면 타이머 취소
         clearTimeout(timer);
     };
 
     useEffect(() => {
-        return () => {
-            // 컴포넌트가 언마운트될 때 타이머 정리
-            clearTimeout(timer);
-        };
+        return () => clearTimeout(timer);
     }, [timer]);
-
-
 
     return (
         <div className={`message-wrapper ${messageStyle}`}>
-        <div className="message-container" onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
-            <div className="message-content">{texts}</div>
+            {isCurrentUserMessage ? (
+                    <div className="message-userId"></div> // 현재 사용자의 메시지일 때 "나"라고 표시
+                ) : (
+                    <div className="message-userId">{userId}</div> // 다른 사용자의 메시지일 때 userId를 표시
+                )}
+            <div className="message-container" onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
+                
+                <div className="message-content">{texts}</div>
+                
+            </div>
+            {!deleted && (
+                <div className={`message-time-container ${messageStyle}`}>
+                    <div className="message-time">{sendTime1}</div>
+                </div>
+            )}
         </div>
-        {!deleted && <div className={`message-time-container ${messageStyle}`}>
-            <div className="message-time" >{sendTime1}</div>
-        </div>}
-    </div>
     );
 };
 
