@@ -11,11 +11,6 @@ const SERVER_URL = 'http://localhost:3030';
 
 const ChatRoom = () => {
     const [messages, setMessages] = useState([
-        { id: 0, text: "끄덕끄덕", deleted:false,sendTime:"09:11",userId:1 },
-        { id: 1, text: "안녕하세요! 어떻게 지내세요?",  deleted:false, sendTime:"12:12",userId:1 },
-        { id: 2, text: "전 잘 지내죠! 당신은 어떻게 지내시나요?",  deleted:false, sendTime:"12:12",userId:2},
-        { id: 3, text: "끄적",  deleted:false,sendTime:"12:13" ,userId:1},
-        { id: 4, text: "끄적끄적",  deleted:false,sendTime:"23:11" ,userId:1},
     ]);
     const [newMessage, setNewMessage] = useState('');
     const [showModal, setShowModal] = useState(false);
@@ -38,38 +33,52 @@ const ChatRoom = () => {
 
 
   
-      // 컴포넌트 마운트 시 소켓 연결을 설정합니다.
       useEffect(() => {
-          // 소켓 인스턴스를 생성하고 연결합니다.
-          const newSocket = io(SERVER_URL);
-          setSocket(newSocket);
+        // 소켓 인스턴스를 생성하고 연결
+        const newSocket = io(SERVER_URL);
+        setSocket(newSocket);
+    
+        // 이전 메시지를 불러오는 이벤트 리스너
+        newSocket.on('previous messages', (previousMessages) => {
+            setMessages(previousMessages.map((m) => ({ ...m, id: m._id }))); // MongoDB에서 반환된 _id를 사용합니다.
+        });
+    
+        // 새 메시지를 받는 이벤트 리스너
+        newSocket.on('chat message', (message) => {
+            setMessages((currentMessages) => {
+            // MongoDB에서 반환된 _id를 사용하여 중복을 확인합니다.
+            if (!currentMessages.find((m) => m._id === message._id)) {
+                return [...currentMessages, { ...message, id: message._id }];
+            }
+            return currentMessages;
+            });
+        });
+        
+    
+        // 컴포넌트 언마운트 시 이벤트 리스너를 해제하고 소켓 연결을 닫습니다.
+        return () => {
+            newSocket.off('previous messages');
+            newSocket.off('chat message');
+            newSocket.close();
+        };
+    }, [SERVER_URL]); // SERVER_URL이 변경될 경우에만 이 이펙트를 다시 실행합니다.
+    
   
-          // 서버로부터 메시지를 받을 리스너를 설정합니다.
-          newSocket.on('chat message', (message) => {
-              setMessages((currentMessages) => [...currentMessages, message]);
-          });
-  
-          // 컴포넌트 언마운트 시 소켓 연결을 정리합니다.
-          return () => {
-              newSocket.close();
+    const handleSendMessage = () => {
+        if (newMessage.trim() !== '') {
+          // 메시지 객체를 생성합니다.
+          const messageData = {
+            text: newMessage,
+            userId: numericUserId.toString(),
+            sendTime: getCurrentTime(),
           };
-      }, []);
-  
-      const handleSendMessage = () => {
-          if (newMessage.trim() !== '') {
-              // 메시지 객체를 생성합니다.
-              const messageData = {
-                  text: newMessage,
-                  userId: numericUserId,
-                  sendTime: getCurrentTime()
-              };
-
-              // 서버에 'chat message' 이벤트로 메시지를 보냅니다.
-              socket.emit('chat message', messageData);
-  
-              // 입력 필드를 초기화합니다.
-              setNewMessage('');
-          }
+      
+          // 서버에 'chat message' 이벤트로 메시지를 보냅니다.
+          socket.emit('chat message', messageData);
+      
+          // 입력 필드를 초기화합니다.
+          setNewMessage('');
+        }
       };
   
 
@@ -99,13 +108,13 @@ const ChatRoom = () => {
     return (
         <div className="app-container">
         <div className="chat-container">
-        {messages.map(message => (
+        {messages.map((message) => (
             <ChatMessage 
-                key={message.id}
+                key={message.id} // MongoDB 문서의 고유한 _id를 key prop으로 사용
                 id={message.id}
                 text={message.text}
                 userId={message.userId}
-                currentUser={numericUserId} // 현재 로그인한 사용자의 userId를 전달
+                currentUser={numericUserId}
                 sendTime={message.sendTime}
                 onLongPress={handleLongPress}
                 deleted={message.deleted}

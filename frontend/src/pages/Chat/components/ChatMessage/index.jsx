@@ -4,7 +4,7 @@ import './ChatMessage.css';
 const ChatMessage = ({ id, text, userId, onLongPress, deleted, sendTime, currentUser }) => {
     const [timer, setTimer] = useState(null);
     // Determine if the message belongs to the current user for styling
-    const isCurrentUserMessage = userId === currentUser;
+    const isCurrentUserMessage = parseInt(userId) === currentUser;
     const messageClass = isCurrentUserMessage ? 'message user' : 'message other';
     const messageStyle = deleted ? `${messageClass} deleted` : messageClass;
     const texts = deleted ? "삭제된 내용입니다." : text;
