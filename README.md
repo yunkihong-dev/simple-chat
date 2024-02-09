@@ -20,12 +20,12 @@ This rep is for chatapp study
 # 실행
 
 ## frontend ##
-## cd frontend ##
-## npm i ##
-## npm start ##
+### cd frontend ###
+### npm i ###
+### npm start ###
 
 ## backend ##
-## mongoDB 설치 ##
-## cd backend ##
-## npm i ##
-## node app.js ##
+### mongoDB 설치 ###
+### cd backend ###
+### npm i ###
+### node app.js ###
